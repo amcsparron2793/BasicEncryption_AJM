@@ -120,8 +120,6 @@ class RSAKeyPairGenerator:
 
 class RSAEncrypterDecrypter:
     def __init__(self, **kwargs):
-        # TODO: turn private key location and public key location
-        #  into properties and check for correct extensions/existence
         self._private_key_location = kwargs.get('private_key_location', None)
         self._public_key_location = kwargs.get('public_key_location', None)
         self.__private_key_pass = kwargs.get('private_key_pass', None)
@@ -262,17 +260,18 @@ class RSAEncrypterDecrypter:
             return decrypted_bytes.decode('utf-8')
 
 if __name__ == '__main__':
-    GenKey = RSAKeyPairGenerator()
-    """private_key_path, public_key_path = GenKey.gen_keypair(public_key_output_location='../Misc_Project_Files/keys',
-                                                           private_key_output_location='../Misc_Project_Files/keys',
-                                                           private_key_pass='password', overwrite_existing=False)"""
     key_dir = Path('../Misc_Project_Files/keys')
+    private_key_path = key_dir.joinpath('private_key.pem')
+    public_key_path = key_dir.joinpath('public_key.pub')
+
+    if private_key_path.is_file() and public_key_path.is_file():
+        pass
+    else:
+        GenKey = RSAKeyPairGenerator()
+        private_key_path, public_key_path = GenKey.gen_keypair(public_key_output_location=key_dir,
+                                                               private_key_output_location=key_dir,
+                                                               private_key_pass='password', overwrite_existing=False)
+
     EnDe = RSAEncrypterDecrypter(private_key_location=key_dir.joinpath('private_key.pem'),
                                  public_key_location=key_dir.joinpath('public_key.pub'),
                                  private_key_pass='password')
-
-    """with open('C:\\Users\\amcsparron\\Desktop\\stick.png', 'rb') as f:
-        b = f.read()
-    
-    enc = EnDe.encrypt(b)
-    print(type(enc))"""
