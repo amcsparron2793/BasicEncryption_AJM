@@ -259,18 +259,20 @@ class RSAEncrypterDecrypter:
         elif not return_as_bytes:
             return decrypted_bytes.decode('utf-8')
 
+
 if __name__ == '__main__':
     key_dir = Path('../Misc_Project_Files/keys')
     private_key_path = key_dir.joinpath('private_key.pem')
     public_key_path = key_dir.joinpath('public_key.pub')
+    overwrite_existing = True
 
-    if private_key_path.is_file() and public_key_path.is_file():
+    if (private_key_path.is_file() and public_key_path.is_file()) and not overwrite_existing:
         pass
     else:
         GenKey = RSAKeyPairGenerator()
         private_key_path, public_key_path = GenKey.gen_keypair(public_key_output_location=key_dir,
                                                                private_key_output_location=key_dir,
-                                                               private_key_pass='password', overwrite_existing=False)
+                                                               private_key_pass='password', overwrite_existing=overwrite_existing)
 
     EnDe = RSAEncrypterDecrypter(private_key_location=key_dir.joinpath('private_key.pem'),
                                  public_key_location=key_dir.joinpath('public_key.pub'),
